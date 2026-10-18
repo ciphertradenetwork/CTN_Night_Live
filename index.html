@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTN LIVE</title>
+    <style>
+        /* Remove all browser margins and scrollbars */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000000;
+        }
+
+        /* Video covers the full screen area, pinned to the top */
+        .fullscreen-video {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;        /* Fills the screen */
+            object-position: top center; /* Keeps the top part intact, crops only the bottom */
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 
+      - autoplay: Starts playing automatically
+      - muted: Required by browsers to allow autoplay on load
+      - loop: Loops infinitely
+      - playsinline: Keeps video full screen on mobile devices
+    -->
+    <video id="bgVideo" class="fullscreen-video" autoplay muted loop playsinline>
+        <source src="ctn_night_live.mp4" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+
+    <script>
+        const video = document.getElementById('bgVideo');
+
+        // Function to unmute and set volume to 75% on first user interaction
+        function enableAudio() {
+            if (video.muted) {
+                video.muted = false;
+                video.volume = 0.5; // Sets volume to 50%
+                video.play().catch(error => console.log('Autoplay audio error:', error));
+            }
+            // Remove event listeners once unmuted
+            ['click', 'touchstart', 'keydown', 'scroll'].forEach(eventType => {
+                window.removeEventListener(eventType, enableAudio);
+            });
+        }
+
+        // Attach interaction listeners across the entire page
+        ['click', 'touchstart', 'keydown', 'scroll'].forEach(eventType => {
+            window.addEventListener(eventType, enableAudio, { once: true });
+        });
+    </script>
+
+</body>
+</html>
